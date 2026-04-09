@@ -7,27 +7,39 @@ import AnimatedResult from "@/components/AnimatedResult";
 import { type LengthUnit, toMm, fromMm, unitLabel } from "@/lib/units";
 import { calcProxSensorBlock } from "@/lib/calculators/proximity-sensor";
 
+type TimeUnit = "ms" | "µs";
+
+const TIME_UNITS = [
+  { value: "ms", label: "ms" },
+  { value: "µs", label: "µs" },
+];
+
+function toMs(value: number, unit: TimeUnit): number {
+  return unit === "µs" ? value / 1000 : value;
+}
+
 export default function ProximitySensorPage() {
   const [unit, setUnit] = useState<LengthUnit>("mm");
   const [diameter, setDiameter] = useState("");
   const [rpm, setRpm] = useState("");
-  const [responseMs, setResponseMs] = useState("");
+  const [responseTime, setResponseTime] = useState("");
+  const [timeUnit, setTimeUnit] = useState<TimeUnit>("ms");
 
   const resultMm = useMemo(() => {
     const d = parseFloat(diameter);
     const n = parseFloat(rpm);
-    const t = parseFloat(responseMs);
+    const t = parseFloat(responseTime);
     if (isNaN(d) || isNaN(n) || isNaN(t)) return null;
     const dMm = toMm(d, unit);
-    return calcProxSensorBlock(dMm, n, t);
-  }, [diameter, rpm, responseMs, unit]);
+    const tMs = toMs(t, timeUnit);
+    return calcProxSensorBlock(dMm, n, tMs);
+  }, [diameter, rpm, responseTime, unit, timeUnit]);
 
   const resultInUnit = useMemo(
     () => (resultMm !== null ? fromMm(resultMm, unit) : null),
     [resultMm, unit]
   );
 
-  // Surface speed in mm/s for display
   const surfaceSpeedMmS = useMemo(() => {
     const d = parseFloat(diameter);
     const n = parseFloat(rpm);
@@ -43,27 +55,21 @@ export default function ProximitySensorPage() {
       unit={unit}
       onUnitChange={setUnit}
     >
-      {/* 수식 카드 */}
+      {/* 수식 다이어그램 */}
       <div
         className="rounded-xl p-4"
         style={{ background: "var(--surface)", border: "1px solid var(--border)" }}
       >
         <svg viewBox="0 0 280 90" className="w-full" style={{ maxHeight: "80px" }}>
-          {/* Rotating disk */}
           <circle cx="80" cy="45" r="34" fill="none" stroke="#2a2a2a" strokeWidth="1.5" />
           <circle cx="80" cy="45" r="4" fill="#22d3ee" />
-          {/* Diameter line */}
           <line x1="46" y1="45" x2="114" y2="45" stroke="#22d3ee" strokeWidth="1.5" strokeDasharray="3,2" />
           <text x="80" y="58" textAnchor="middle" fill="#22d3ee" fontSize="9">d</text>
-          {/* Block on rim */}
           <rect x="112" y="32" width="14" height="10" rx="2" fill="#a78bfa" opacity="0.8" />
-          {/* Sensor */}
           <rect x="136" y="30" width="10" height="14" rx="2" fill="#f59e0b" opacity="0.7" />
           <line x1="126" y1="37" x2="136" y2="37" stroke="#f59e0b" strokeWidth="1.2" strokeDasharray="2,2" />
-          {/* Labels */}
           <text x="119" y="55" textAnchor="middle" fill="#a78bfa" fontSize="9">블럭</text>
           <text x="141" y="55" textAnchor="middle" fill="#f59e0b" fontSize="9">센서</text>
-          {/* Formula */}
           <text x="220" y="38" textAnchor="middle" fill="#8a8a8a" fontSize="9">v = π·d·n/60</text>
           <text x="220" y="52" textAnchor="middle" fill="#8a8a8a" fontSize="9">L = v · t/1000</text>
         </svg>
@@ -87,10 +93,12 @@ export default function ProximitySensorPage() {
         />
         <NumericInput
           label="센서 응답속도 (t)"
-          unit="ms"
-          value={responseMs}
-          onChange={setResponseMs}
-          placeholder="10"
+          unit={timeUnit}
+          value={responseTime}
+          onChange={setResponseTime}
+          placeholder={timeUnit === "ms" ? "10" : "10000"}
+          unitOptions={TIME_UNITS}
+          onUnitChange={(u) => setTimeUnit(u as TimeUnit)}
         />
       </div>
 

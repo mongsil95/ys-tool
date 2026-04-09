@@ -1,11 +1,18 @@
 "use client";
 
+interface UnitOption {
+  value: string;
+  label: string;
+}
+
 interface NumericInputProps {
   label: string;
   unit: string;
   value: string;
   onChange: (value: string) => void;
   placeholder?: string;
+  unitOptions?: UnitOption[];
+  onUnitChange?: (unit: string) => void;
 }
 
 export default function NumericInput({
@@ -14,6 +21,8 @@ export default function NumericInput({
   value,
   onChange,
   placeholder = "0",
+  unitOptions,
+  onUnitChange,
 }: NumericInputProps) {
   return (
     <div className="flex flex-col gap-1.5">
@@ -37,9 +46,33 @@ export default function NumericInput({
           className="flex-1 bg-transparent text-xl font-semibold text-[var(--text-primary)] placeholder-[var(--text-secondary)] outline-none min-w-0"
           style={{ caretColor: "var(--accent)" }}
         />
-        <span className="text-sm font-medium text-[var(--text-secondary)] shrink-0">
-          {unit}
-        </span>
+        {unitOptions && onUnitChange ? (
+          <div
+            className="flex rounded-md overflow-hidden shrink-0"
+            style={{ border: "1px solid var(--border)" }}
+          >
+            {unitOptions.map((opt) => (
+              <button
+                key={opt.value}
+                type="button"
+                onClick={() => onUnitChange(opt.value)}
+                className="px-2.5 py-1 text-xs font-medium transition-all"
+                style={{
+                  background: unit === opt.value ? "var(--accent)" : "transparent",
+                  color: unit === opt.value ? "#000" : "var(--text-secondary)",
+                  minWidth: "36px",
+                  minHeight: "30px",
+                }}
+              >
+                {opt.label}
+              </button>
+            ))}
+          </div>
+        ) : (
+          <span className="text-sm font-medium text-[var(--text-secondary)] shrink-0">
+            {unit}
+          </span>
+        )}
       </div>
     </div>
   );

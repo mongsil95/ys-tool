@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "gitpush": "git add -A && git commit -m \"update: $(date '+%Y-%m-%d %H:%M')\" && git push"
   },
   "dependencies": {
     "framer-motion": "^12.38.0",
