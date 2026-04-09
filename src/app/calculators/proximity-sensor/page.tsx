@@ -7,15 +7,18 @@ import AnimatedResult from "@/components/AnimatedResult";
 import { type LengthUnit, toMm, fromMm, unitLabel } from "@/lib/units";
 import { calcProxSensor } from "@/lib/calculators/proximity-sensor";
 
-type TimeUnit = "ms" | "µs";
+type TimeUnit = "ms" | "µs" | "Hz";
 
 const TIME_UNITS = [
   { value: "ms", label: "ms" },
   { value: "µs", label: "µs" },
+  { value: "Hz", label: "Hz" },
 ];
 
 function toMs(value: number, unit: TimeUnit): number {
-  return unit === "µs" ? value / 1000 : value;
+  if (unit === "µs") return value / 1000;
+  if (unit === "Hz") return 1000 / value; // 주기 = 1/f
+  return value;
 }
 
 export default function ProximitySensorPage() {
@@ -98,7 +101,7 @@ export default function ProximitySensorPage() {
           unit={timeUnit}
           value={responseTime}
           onChange={setResponseTime}
-          placeholder={timeUnit === "ms" ? "10" : "10000"}
+          placeholder={timeUnit === "ms" ? "10" : timeUnit === "µs" ? "10000" : "500"}
           unitOptions={TIME_UNITS}
           onUnitChange={(u) => setTimeUnit(u as TimeUnit)}
         />
