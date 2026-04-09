@@ -17,8 +17,8 @@ const calculators = [
   },
   {
     href: "/calculators/proximity-sensor",
-    title: "근접센서 블럭 길이",
-    description: "지름, 회전수, 응답속도로 최소 블럭 길이 계산",
+    title: "호의 길이",
+    description: "지름, 회전수, 응답속도로 센서 감지 호의 길이 계산",
     icon: (
       <svg viewBox="0 0 40 40" fill="none" className="w-10 h-10">
         <circle cx="17" cy="22" r="12" stroke="#22d3ee" strokeWidth="1.5" />
