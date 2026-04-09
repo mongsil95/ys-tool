@@ -7,18 +7,8 @@ import AnimatedResult from "@/components/AnimatedResult";
 import { type LengthUnit, toMm, fromMm, unitLabel } from "@/lib/units";
 import { calcProxSensor } from "@/lib/calculators/proximity-sensor";
 
-type TimeUnit = "ms" | "µs" | "Hz";
-
-const TIME_UNITS = [
-  { value: "ms", label: "ms" },
-  { value: "µs", label: "µs" },
-  { value: "Hz", label: "Hz" },
-];
-
-function toMs(value: number, unit: TimeUnit): number {
-  if (unit === "µs") return value / 1000;
-  if (unit === "Hz") return 1000 / value; // 주기 = 1/f
-  return value;
+function toMs(value: number): number {
+  return 1000 / value; // Hz → ms
 }
 
 export default function ProximitySensorPage() {
@@ -26,17 +16,15 @@ export default function ProximitySensorPage() {
   const [diameter, setDiameter] = useState("");
   const [rpm, setRpm] = useState("");
   const [responseTime, setResponseTime] = useState("");
-  const [timeUnit, setTimeUnit] = useState<TimeUnit>("ms");
-
   const result = useMemo(() => {
     const d = parseFloat(diameter);
     const n = parseFloat(rpm);
     const t = parseFloat(responseTime);
     if (isNaN(d) || isNaN(n) || isNaN(t)) return null;
     const dMm = toMm(d, unit);
-    const tMs = toMs(t, timeUnit);
+    const tMs = toMs(t);
     return calcProxSensor(dMm, n, tMs);
-  }, [diameter, rpm, responseTime, unit, timeUnit]);
+  }, [diameter, rpm, responseTime, unit]);
 
   const arcLengthInUnit = useMemo(
     () => (result !== null ? fromMm(result.arcLength, unit) : null),
@@ -98,12 +86,10 @@ export default function ProximitySensorPage() {
         />
         <NumericInput
           label="센서 응답속도 (T_res)"
-          unit={timeUnit}
+          unit="Hz"
           value={responseTime}
           onChange={setResponseTime}
-          placeholder={timeUnit === "ms" ? "10" : timeUnit === "µs" ? "10000" : "500"}
-          unitOptions={TIME_UNITS}
-          onUnitChange={(u) => setTimeUnit(u as TimeUnit)}
+          placeholder="500"
         />
       </div>
 
