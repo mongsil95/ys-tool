@@ -1,65 +1,113 @@
-import Image from "next/image";
+import Link from "next/link";
 
-export default function Home() {
+const calculators = [
+  {
+    href: "/calculators/chord-diameter",
+    title: "원의 지름",
+    description: "현의 길이와 수선의 길이로 원의 지름 계산",
+    icon: (
+      <svg viewBox="0 0 40 40" fill="none" className="w-10 h-10">
+        <circle cx="20" cy="20" r="15" stroke="#22d3ee" strokeWidth="1.5" />
+        <line x1="8" y1="14" x2="32" y2="14" stroke="#22d3ee" strokeWidth="1.8" />
+        <line x1="20" y1="14" x2="20" y2="5" stroke="#a78bfa" strokeWidth="1.8" strokeDasharray="3,2" />
+        <circle cx="20" cy="20" r="2" fill="#22d3ee" />
+      </svg>
+    ),
+    tag: "기하",
+  },
+  {
+    href: "/calculators/proximity-sensor",
+    title: "근접센서 블럭 길이",
+    description: "지름, 회전수, 응답속도로 최소 블럭 길이 계산",
+    icon: (
+      <svg viewBox="0 0 40 40" fill="none" className="w-10 h-10">
+        <circle cx="17" cy="22" r="12" stroke="#22d3ee" strokeWidth="1.5" />
+        <circle cx="17" cy="22" r="2.5" fill="#22d3ee" />
+        <rect x="27" y="17" width="6" height="4" rx="1" fill="#a78bfa" opacity="0.85" />
+        <rect x="34" y="16" width="4" height="6" rx="1" fill="#f59e0b" opacity="0.8" />
+        <line x1="33" y1="19" x2="34" y2="19" stroke="#f59e0b" strokeWidth="1" strokeDasharray="1.5,1" />
+      </svg>
+    ),
+    tag: "센서",
+  },
+];
+
+export default function HomePage() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+    <div className="min-h-dvh flex flex-col" style={{ background: "var(--background)" }}>
+      {/* Header */}
+      <header className="px-5 pt-10 pb-6">
+        <p className="text-xs font-medium tracking-widest text-[var(--text-secondary)] uppercase mb-1">
+          YS Tool
+        </p>
+        <h1 className="text-2xl font-bold">계산기</h1>
+      </header>
+
+      {/* Calculator list */}
+      <main className="flex-1 px-4 flex flex-col gap-3">
+        {calculators.map((calc) => (
+          <Link
+            key={calc.href}
+            href={calc.href}
+            className="flex items-center gap-4 rounded-2xl p-4 active:scale-[0.98] transition-transform"
+            style={{
+              background: "var(--surface)",
+              border: "1px solid var(--border)",
+            }}
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
+            <div
+              className="flex items-center justify-center rounded-xl shrink-0"
+              style={{
+                width: "56px",
+                height: "56px",
+                background: "var(--surface-2)",
+                border: "1px solid var(--border)",
+              }}
+            >
+              {calc.icon}
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2 mb-0.5">
+                <span className="font-semibold text-base">{calc.title}</span>
+                <span
+                  className="text-[10px] font-medium px-1.5 py-0.5 rounded-full"
+                  style={{
+                    background: "var(--accent-dim)",
+                    color: "var(--accent)",
+                    border: "1px solid rgba(34,211,238,0.2)",
+                  }}
+                >
+                  {calc.tag}
+                </span>
+              </div>
+              <p className="text-xs text-[var(--text-secondary)] truncate">
+                {calc.description}
+              </p>
+            </div>
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 16 16"
+              fill="none"
+              className="shrink-0 text-[var(--text-secondary)]"
+            >
+              <path
+                d="M6 4l4 4-4 4"
+                stroke="currentColor"
+                strokeWidth="1.6"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </Link>
+        ))}
       </main>
+
+      <footer className="px-5 py-6 text-center">
+        <p className="text-xs text-[var(--text-secondary)]">
+          계산기 추가 예정
+        </p>
+      </footer>
     </div>
   );
 }
