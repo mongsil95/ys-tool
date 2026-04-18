@@ -30,6 +30,24 @@ const calculators = [
     ),
     tag: "센서",
   },
+  {
+    href: "/calculators/rpm-period",
+    title: "RPM / 주기",
+    description: "회전속도(RPM)와 주기(1회전 시간) 상호 변환",
+    icon: (
+      <svg viewBox="0 0 40 40" fill="none" className="w-10 h-10">
+        <circle cx="20" cy="20" r="13" stroke="#22d3ee" strokeWidth="1.5" />
+        <circle cx="20" cy="20" r="2.5" fill="#22d3ee" />
+        {/* 회전 방향 화살표 */}
+        <path
+          d="M 20,7 A 13,13 0 0,1 33,20"
+          stroke="#a78bfa" strokeWidth="2" strokeLinecap="round" fill="none"
+        />
+        <polygon points="33,14 33,26 39,20" fill="#a78bfa" />
+      </svg>
+    ),
+    tag: "회전",
+  },
 ];
 
 export default function HomePage() {

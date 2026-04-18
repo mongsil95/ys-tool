@@ -6,8 +6,8 @@ import UnitSelector, { type LengthUnit } from "./UnitSelector";
 interface CalculatorLayoutProps {
   title: string;
   description?: string;
-  unit: LengthUnit;
-  onUnitChange: (unit: LengthUnit) => void;
+  unit?: LengthUnit;
+  onUnitChange?: (unit: LengthUnit) => void;
   children: React.ReactNode;
 }
 
@@ -54,7 +54,9 @@ export default function CalculatorLayout({
             )}
           </div>
         </div>
-        <UnitSelector value={unit} onChange={onUnitChange} />
+        {unit !== undefined && onUnitChange !== undefined && (
+          <UnitSelector value={unit} onChange={onUnitChange} />
+        )}
       </header>
 
       {/* Content */}
